@@ -1,0 +1,364 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/homeScroll"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:clipToPadding="false"
+        android:fillViewport="false"
+        android:paddingBottom="14dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingHorizontal="18dp"
+            android:paddingTop="8dp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="54dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvBrand"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="TaxiScan"
+                    android:textColor="@color/on_surface"
+                    android:textSize="25sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvJoinGroup"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:background="@drawable/bg_location_button"
+                    android:clickable="true"
+                    android:contentDescription="Відкрити налаштування дозволів"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:text="➤"
+                    android:textColor="@color/secondary"
+                    android:textSize="20sp" />
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardRadar"
+                android:layout_width="match_parent"
+                android:layout_height="190dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="14dp"
+                app:cardBackgroundColor="@color/primary_container"
+                app:cardCornerRadius="25dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/primary"
+                app:strokeWidth="1dp">
+
+                <FrameLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/bg_radar_card"
+                    android:padding="18dp">
+
+                    <LinearLayout
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="start"
+                        android:layout_marginEnd="142dp"
+                        android:gravity="center_vertical"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/tvRadarBadge"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:background="@drawable/bg_active_badge"
+                            android:paddingHorizontal="10dp"
+                            android:paddingVertical="4dp"
+                            android:text="●  НЕАКТИВНИЙ"
+                            android:textColor="@color/primary"
+                            android:textSize="11sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvRadarTitle"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="8dp"
+                            android:text="Радар вимкнено"
+                            android:textColor="@color/on_surface"
+                            android:textSize="21sp"
+                            android:textStyle="bold" />
+
+                        <TextView
+                            android:id="@+id/tvRadarDescription"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="7dp"
+                            android:text="Відстежуємо Bolt, Uklon та Uber"
+                            android:textColor="@color/on_surface_variant"
+                            android:textSize="12sp" />
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:gravity="center_vertical"
+                            android:orientation="horizontal">
+
+                            <com.google.android.material.switchmaterial.SwitchMaterial
+                                android:id="@+id/switchRadar"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:checked="false"
+                                android:minWidth="0dp"
+                                android:padding="0dp"
+                                app:thumbTint="@color/on_surface"
+                                app:trackTint="@color/primary" />
+
+                            <TextView
+                                android:id="@+id/tvRadarSwitchLabel"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_marginStart="4dp"
+                                android:text="Вимк."
+                                android:textColor="@color/on_surface"
+                                android:textSize="13sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+                    </LinearLayout>
+
+                    <FrameLayout
+                        android:layout_width="142dp"
+                        android:layout_height="142dp"
+                        android:layout_gravity="end|center_vertical"
+                        android:background="@drawable/bg_radar_disc">
+
+                        <ImageView
+                            android:layout_width="124dp"
+                            android:layout_height="124dp"
+                            android:layout_gravity="center"
+                            android:contentDescription="Неонова ілюстрація автомобіля на радарі TaxiScan"
+                            android:src="@drawable/ill_radar_car" />
+                    </FrameLayout>
+                </FrameLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                android:orientation="horizontal">
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="82dp"
+                    android:layout_marginEnd="6dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="17dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/outline"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="vertical" android:paddingHorizontal="13dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Сьогодні" android:textColor="@color/on_surface_variant" android:textSize="12sp" />
+                        <TextView android:id="@+id/tvTodayRevenue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="0 ₴" android:textColor="@color/secondary" android:textSize="22sp" android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="82dp"
+                    android:layout_marginHorizontal="3dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="17dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/outline"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="vertical" android:paddingHorizontal="13dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Поїздок" android:textColor="@color/on_surface_variant" android:textSize="12sp" />
+                        <TextView android:id="@+id/tvTodayTrips" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="0" android:textColor="@color/on_surface" android:textSize="22sp" android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
+                    android:layout_width="0dp"
+                    android:layout_height="82dp"
+                    android:layout_marginStart="6dp"
+                    android:layout_weight="1"
+                    app:cardBackgroundColor="@color/surface"
+                    app:cardCornerRadius="17dp"
+                    app:cardElevation="0dp"
+                    app:strokeColor="@color/outline"
+                    app:strokeWidth="1dp">
+
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="vertical" android:paddingHorizontal="13dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="За годину" android:textColor="@color/on_surface_variant" android:textSize="12sp" />
+                        <TextView android:id="@+id/tvHourlyRevenue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginTop="6dp" android:text="0 ₴" android:textColor="@color/primary" android:textSize="22sp" android:textStyle="bold" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardPermissions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/outline"
+                app:strokeWidth="1dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="15dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                        <TextView android:id="@+id/tvPermissionsTitle" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:text="Налаштування" android:textColor="@color/on_surface" android:textSize="16sp" android:textStyle="bold" />
+                        <TextView android:id="@+id/tvPermissionsProgress" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0 з 3" android:textColor="@color/primary" android:textSize="14sp" android:textStyle="bold" />
+                    </LinearLayout>
+                    <ProgressBar android:id="@+id/progressPermissions" style="?android:attr/progressBarStyleHorizontal" android:layout_width="match_parent" android:layout_height="7dp" android:layout_marginTop="8dp" android:layout_marginBottom="8dp" android:max="3" android:progress="0" android:progressTint="@color/primary" android:progressBackgroundTint="@color/outline" />
+
+                    <TextView android:id="@+id/tvScreenAccessStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="3dp" android:text="○  Доступ до екрана" android:textColor="@color/on_surface_variant" android:textSize="14sp" />
+                    <TextView android:id="@+id/tvNotificationStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingVertical="3dp" android:text="○  Сповіщення" android:textColor="@color/on_surface_variant" android:textSize="14sp" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:gravity="center_vertical" android:orientation="horizontal">
+                        <TextView android:id="@+id/btnOverlayAccess" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:background="?attr/selectableItemBackground" android:clickable="true" android:focusable="true" android:paddingVertical="5dp" android:text="○  Плаваючий розрахунок" android:textColor="@color/on_surface_variant" android:textSize="14sp" />
+                        <com.google.android.material.button.MaterialButton android:id="@+id/btnNotificationAccess" style="@style/Widget.Material3.Button.OutlinedButton" android:layout_width="wrap_content" android:layout_height="38dp" android:minHeight="38dp" android:text="Дозволи" android:textAllCaps="false" android:textColor="@color/secondary" app:strokeColor="@color/secondary" app:cornerRadius="20dp" />
+                    </LinearLayout>
+                    <TextView android:id="@+id/tvNotificationAccessStatus" android:layout_width="0dp" android:layout_height="0dp" android:visibility="gone" />
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnSystemPermissions" android:layout_width="match_parent" android:layout_height="40dp" android:layout_marginTop="5dp" android:text="Перевірити всі системні дозволи" android:textAllCaps="false" android:textSize="12sp" app:backgroundTint="@color/surface_variant" app:cornerRadius="12dp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardCalculator"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="14dp"
+                app:cardBackgroundColor="@color/surface"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp"
+                app:strokeColor="@color/outline"
+                app:strokeWidth="1dp">
+
+                <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:orientation="vertical" android:padding="15dp">
+                    <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Калькулятор замовлення" android:textColor="@color/on_surface" android:textSize="17sp" android:textStyle="bold" />
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:orientation="horizontal">
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginEnd="5dp" android:layout_weight="1" app:boxBackgroundMode="outline" app:boxCornerRadiusBottomEnd="13dp" app:boxCornerRadiusBottomStart="13dp" app:boxCornerRadiusTopEnd="13dp" app:boxCornerRadiusTopStart="13dp" app:boxStrokeColor="@color/primary" app:suffixText="₴">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etTripAmount" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Сума" android:inputType="numberDecimal" android:maxLines="1" android:paddingVertical="12dp" android:textColor="@color/on_surface" android:textColorHint="@color/on_surface_variant" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                        <com.google.android.material.textfield.TextInputLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_marginStart="5dp" android:layout_weight="1" app:boxBackgroundMode="outline" app:boxCornerRadiusBottomEnd="13dp" app:boxCornerRadiusBottomStart="13dp" app:boxCornerRadiusTopEnd="13dp" app:boxCornerRadiusTopStart="13dp" app:boxStrokeColor="@color/primary" app:suffixText="км">
+                            <com.google.android.material.textfield.TextInputEditText android:id="@+id/etTripDistance" android:layout_width="match_parent" android:layout_height="wrap_content" android:hint="Відстань" android:inputType="numberDecimal" android:maxLines="1" android:paddingVertical="12dp" android:textColor="@color/on_surface" android:textColorHint="@color/on_surface_variant" />
+                        </com.google.android.material.textfield.TextInputLayout>
+                    </LinearLayout>
+                    <com.google.android.material.button.MaterialButton android:id="@+id/btnCalculate" android:layout_width="match_parent" android:layout_height="48dp" android:layout_marginTop="10dp" android:text="Порахувати чистий дохід" android:textAllCaps="false" android:textColor="@color/background" android:textSize="15sp" android:textStyle="bold" app:backgroundTint="@color/primary" app:cornerRadius="26dp" />
+                    <LinearLayout android:id="@+id/layoutCalcResult" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="12dp" android:background="@drawable/bg_calc_result" android:orientation="vertical" android:padding="14dp" android:visibility="gone">
+                        <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Чистий дохід" android:textColor="@color/on_surface_variant" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvNetResult" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:textColor="@color/primary" android:textSize="28sp" android:textStyle="bold" />
+                        <TextView android:id="@+id/tvOrderBreakdown" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:textColor="@color/on_surface_variant" android:textSize="13sp" />
+                        <TextView android:id="@+id/tvPerKm" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="5dp" android:textColor="@color/on_surface" android:textSize="14sp" android:textStyle="bold" />
+                    </LinearLayout>
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="7dp" android:orientation="horizontal">
+                        <LinearLayout android:id="@+id/itemPrice" android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:clickable="true" android:focusable="true" android:orientation="horizontal" android:paddingVertical="4dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Авто: " android:textColor="@color/on_surface_variant" android:textSize="12sp" />
+                            <TextView android:id="@+id/tvPriceValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/on_surface_variant" android:textSize="12sp" />
+                        </LinearLayout>
+                        <LinearLayout android:id="@+id/itemCommission" android:layout_width="wrap_content" android:layout_height="wrap_content" android:clickable="true" android:focusable="true" android:orientation="horizontal" android:paddingVertical="4dp">
+                            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Комісія: " android:textColor="@color/on_surface_variant" android:textSize="12sp" />
+                            <TextView android:id="@+id/tvCommissionValue" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textColor="@color/on_surface_variant" android:textSize="12sp" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <TextView android:layout_width="match_parent" android:layout_height="wrap_content" android:paddingStart="3dp" android:paddingBottom="7dp" android:text="Сервіси" android:textColor="@color/on_surface" android:textSize="18sp" android:textStyle="bold" />
+            <LinearLayout android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginBottom="14dp" android:orientation="horizontal">
+                <com.google.android.material.card.MaterialCardView android:id="@+id/cardUklon" android:layout_width="0dp" android:layout_height="78dp" android:layout_marginEnd="5dp" android:layout_weight="1" android:clickable="true" android:focusable="true" app:cardBackgroundColor="@color/surface" app:cardCornerRadius="17dp" app:cardElevation="0dp" app:strokeColor="@color/outline" app:strokeWidth="1dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="11dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ⓤ" android:textColor="@color/secondary" android:textSize="18sp" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Uklon" android:textColor="@color/on_surface" android:textSize="13sp" android:textStyle="bold" />
+                        <TextView android:id="@+id/tvUklonStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="● Перевірка" android:textColor="@color/on_surface_variant" android:textSize="10sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView android:id="@+id/cardBolt" android:layout_width="0dp" android:layout_height="78dp" android:layout_marginHorizontal="3dp" android:layout_weight="1" android:clickable="true" android:focusable="true" app:cardBackgroundColor="@color/surface" app:cardCornerRadius="17dp" app:cardElevation="0dp" app:strokeColor="@color/outline" app:strokeWidth="1dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="11dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ⓑ" android:textColor="@color/primary" android:textSize="18sp" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bolt" android:textColor="@color/on_surface" android:textSize="13sp" android:textStyle="bold" />
+                        <TextView android:id="@+id/tvBoltStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="● Перевірка" android:textColor="@color/on_surface_variant" android:textSize="10sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+                <com.google.android.material.card.MaterialCardView android:id="@+id/cardUber" android:layout_width="0dp" android:layout_height="78dp" android:layout_marginStart="5dp" android:layout_weight="1" android:clickable="true" android:focusable="true" app:cardBackgroundColor="@color/surface" app:cardCornerRadius="17dp" app:cardElevation="0dp" app:strokeColor="@color/outline" app:strokeWidth="1dp">
+                    <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:orientation="vertical" android:padding="11dp">
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Ⓤ" android:textColor="@color/on_surface" android:textSize="18sp" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Uber Driver" android:textColor="@color/on_surface" android:textSize="12sp" android:textStyle="bold" />
+                        <TextView android:id="@+id/tvUberStatus" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="● Перевірка" android:textColor="@color/on_surface_variant" android:textSize="10sp" />
+                    </LinearLayout>
+                </com.google.android.material.card.MaterialCardView>
+            </LinearLayout>
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cardSubscription"
+                android:layout_width="match_parent"
+                android:layout_height="78dp"
+                android:layout_marginBottom="12dp"
+                android:clickable="true"
+                android:focusable="true"
+                app:cardBackgroundColor="@color/secondary"
+                app:cardCornerRadius="20dp"
+                app:cardElevation="0dp">
+                <LinearLayout android:layout_width="match_parent" android:layout_height="match_parent" android:gravity="center_vertical" android:orientation="horizontal" android:paddingHorizontal="16dp">
+                    <TextView android:layout_width="44dp" android:layout_height="wrap_content" android:text="★" android:textColor="@color/background" android:textSize="33sp" />
+                    <LinearLayout android:layout_width="0dp" android:layout_height="wrap_content" android:layout_weight="1" android:orientation="vertical">
+                        <TextView android:id="@+id/tvSubTitle" android:layout_width="match_parent" android:layout_height="wrap_content" android:text="Підписка Premium" android:textColor="@color/background" android:textSize="17sp" android:textStyle="bold" />
+                        <TextView android:id="@+id/tvSubStatus" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_marginTop="2dp" android:text="Неактивна • натисніть, щоб оформити" android:textColor="@color/background" android:textSize="12sp" />
+                    </LinearLayout>
+                    <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="›" android:textColor="@color/background" android:textSize="26sp" />
+                </LinearLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <LinearLayout android:id="@+id/itemSound" android:layout_width="match_parent" android:layout_height="48dp" android:gravity="center_vertical" android:visibility="gone" />
+            <TextView android:id="@+id/btnDriverTools" android:layout_width="match_parent" android:layout_height="1dp" android:visibility="gone" />
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="64dp"
+        android:background="@color/surface"
+        android:orientation="horizontal"
+        android:paddingHorizontal="8dp">
+
+        <LinearLayout android:id="@+id/navHome" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true">
+            <View android:id="@+id/navMarkHome" android:layout_width="22dp" android:layout_height="3dp" android:layout_marginBottom="4dp" android:background="@color/primary" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="◆" android:textColor="@color/primary" android:textSize="20sp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Головна" android:textColor="@color/primary" android:textSize="11sp" android:textStyle="bold" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/navCalculator" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true">
+            <View android:id="@+id/navMarkCalculator" android:layout_width="22dp" android:layout_height="3dp" android:layout_marginBottom="4dp" android:background="@color/primary" android:visibility="invisible" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="▤" android:textColor="@color/on_surface_variant" android:textSize="21sp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Розрахунок" android:textColor="@color/on_surface_variant" android:textSize="11sp" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/navStatistics" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true">
+            <View android:id="@+id/navMarkStatistics" android:layout_width="22dp" android:layout_height="3dp" android:layout_marginBottom="4dp" android:background="@color/primary" android:visibility="invisible" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="▥" android:textColor="@color/on_surface_variant" android:textSize="21sp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Статистика" android:textColor="@color/on_surface_variant" android:textSize="11sp" />
+        </LinearLayout>
+        <LinearLayout android:id="@+id/navSettings" android:layout_width="0dp" android:layout_height="match_parent" android:layout_weight="1" android:gravity="center" android:orientation="vertical" android:clickable="true" android:focusable="true">
+            <View android:id="@+id/navMarkSettings" android:layout_width="22dp" android:layout_height="3dp" android:layout_marginBottom="4dp" android:background="@color/primary" android:visibility="invisible" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="◉" android:textColor="@color/on_surface_variant" android:textSize="21sp" />
+            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Налаштування" android:textColor="@color/on_surface_variant" android:textSize="11sp" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

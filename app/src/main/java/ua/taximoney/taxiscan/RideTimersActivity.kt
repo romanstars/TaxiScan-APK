@@ -154,9 +154,21 @@ class RideTimersActivity : AppCompatActivity() {
         val key = selectedService.lowercase(Locale.ROOT)
         val tripsKey = "accepted_stats_${key}_trips"
         edit.putInt(tripsKey, prefs.getInt(tripsKey, 0) + 1)
+        val dateToken = SimpleDateFormat("yyyyMMdd", Locale.ROOT).format(Date(now))
+        if (prefs.getString("accepted_stats_day", "") != dateToken) {
+            edit.putString("accepted_stats_day", dateToken).putLong("accepted_stats_day_started_at", now)
+            listOf("bolt", "uklon", "uber").forEach { serviceKey ->
+                edit.putFloat("accepted_stats_today_${serviceKey}_revenue", 0f)
+                    .putInt("accepted_stats_today_${serviceKey}_trips", 0)
+            }
+        }
+        val todayTripsKey = "accepted_stats_today_${key}_trips"
+        edit.putInt(todayTripsKey, prefs.getInt(todayTripsKey, 0) + 1)
         if (amount != null) {
             val revenueKey = "accepted_stats_${key}_revenue"
+            val todayRevenueKey = "accepted_stats_today_${key}_revenue"
             edit.putFloat(revenueKey, prefs.getFloat(revenueKey, 0f) + amount)
+                .putFloat(todayRevenueKey, prefs.getFloat(todayRevenueKey, 0f) + amount)
                 .putString(DriverPrefs.LAST_ACCEPTED_SUMMARY, "$selectedService • ${amount.toInt()} ₴ • ${clock(now)}")
                 .putLong(DriverPrefs.LAST_ACCEPTED_AT, now)
                 .putString(DriverPrefs.LAST_ACCEPTED_SERVICE, selectedService)
