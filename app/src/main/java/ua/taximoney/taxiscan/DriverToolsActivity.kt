@@ -94,9 +94,25 @@ class DriverToolsActivity : AppCompatActivity() {
     private fun overlayDialog(){
         val e=EditText(this).apply { hint="Колір, наприклад #32BB78";setText(prefs.getString(DriverPrefs.OVERLAY_COLOR,"#32BB78")) }
         val size=field("Розмір тексту (sp)",prefs.getFloat(DriverPrefs.OVERLAY_TEXT_SIZE,14f));val alpha=field("Прозорість (0.2–1)",prefs.getFloat(DriverPrefs.OVERLAY_ALPHA,1f))
-        val modes=arrayOf("Кожна пропозиція","Остання пропозиція","Лише прийняті (потрібне розпізнавання статусу)")
-        val box=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(16),0,dp(16),0)};box.addView(e);box.addView(size);box.addView(alpha)
-        MaterialAlertDialogBuilder(this).setTitle("Плаваюче вікно").setView(box).setItems(modes){_,i->prefs.edit().putInt(DriverPrefs.OVERLAY_MODE,i).apply()}.setPositiveButton("Зберегти"){_,_->prefs.edit().putString(DriverPrefs.OVERLAY_COLOR,e.text.toString()).putFloat(DriverPrefs.OVERLAY_TEXT_SIZE,size.text.toString().toFloatOrNull()?:14f).putFloat(DriverPrefs.OVERLAY_ALPHA,(alpha.text.toString().toFloatOrNull()?:1f).coerceIn(.2f,1f)).apply()}.setNegativeButton("Закрити",null).show()
+        val modes=arrayOf("Показувати всі розпізнані пропозиції","Показувати останню пропозицію","Лише прийняті (статус треба позначати вручну)")
+        val mode=Spinner(this).apply{
+            adapter=ArrayAdapter(this@DriverToolsActivity,android.R.layout.simple_spinner_dropdown_item,modes)
+            setSelection(prefs.getInt(DriverPrefs.OVERLAY_MODE,1).coerceIn(0,modes.lastIndex))
+        }
+        val box=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(16),0,dp(16),0)}
+        box.addView(e);box.addView(size);box.addView(alpha)
+        box.addView(TextView(this).apply{text="Режим плаваючого вікна";setTextColor(Color.DKGRAY);textSize=14f;setPadding(0,dp(10),0,dp(2))})
+        box.addView(mode)
+        MaterialAlertDialogBuilder(this).setTitle("Налаштування плаваючого вікна").setView(box)
+            .setPositiveButton("Зберегти"){_,_->
+                val color=e.text.toString().trim()
+                val validColor=runCatching{Color.parseColor(color)}.isSuccess
+                val textSize=size.text.toString().replace(',','.').toFloatOrNull()?.coerceIn(10f,28f)?:14f
+                val opacity=alpha.text.toString().replace(',','.').toFloatOrNull()?.coerceIn(.2f,1f)?:1f
+                if(!validColor){Toast.makeText(this,"Вкажіть колір у форматі #RRGGBB",Toast.LENGTH_SHORT).show();return@setPositiveButton}
+                prefs.edit().putString(DriverPrefs.OVERLAY_COLOR,color).putFloat(DriverPrefs.OVERLAY_TEXT_SIZE,textSize)
+                    .putFloat(DriverPrefs.OVERLAY_ALPHA,opacity).putInt(DriverPrefs.OVERLAY_MODE,mode.selectedItemPosition).apply()
+            }.setNegativeButton("Закрити",null).show()
     }
     private fun timersDialog(){val keys=listOf(DriverPrefs.TIMER_ACCEPTED,DriverPrefs.TIMER_MEETING,DriverPrefs.TIMER_IDLE,DriverPrefs.TIMER_WAIT,DriverPrefs.TIMER_GENERAL);val labels=listOf("Після прийняття","До зустрічі","Простій","Очікування","Загальний");val fields=keys.indices.map{field(labels[it]+" (хв)",prefs.getFloat(keys[it],0f))};val box=LinearLayout(this).apply{orientation=LinearLayout.VERTICAL;setPadding(dp(18),0,dp(18),0)};fields.forEach(box::addView);MaterialAlertDialogBuilder(this).setTitle("Таймери").setView(box).setPositiveButton("Зберегти"){_,_->val ed=prefs.edit();fields.forEachIndexed{i,e->ed.putFloat(keys[i],e.text.toString().toFloatOrNull()?:0f)};ed.apply()}.setNegativeButton("Скасувати",null).show()}
     private fun showStats(){

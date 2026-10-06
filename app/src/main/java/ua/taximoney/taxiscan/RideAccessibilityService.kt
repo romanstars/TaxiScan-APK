@@ -47,7 +47,17 @@ class RideAccessibilityService : AccessibilityService() {
         val values = RideCapture.parse(text)
         storeLatestOffer(serviceName, values)
         tryAutoAction(serviceName, rootInActiveWindow, values, text)
-        if (values.fare != null && values.distance != null) {
+        val overlayMode = DriverPrefs.prefs(this).getInt(DriverPrefs.OVERLAY_MODE, 1)
+        if (overlayMode == 2) {
+            val p = DriverPrefs.prefs(this)
+            val activeTrip = p.getString(DriverPrefs.TIMER_ACTIVE_SERVICE, "") == serviceName &&
+                p.getLong(DriverPrefs.TIMER_ACCEPTED_AT, 0L) > 0L &&
+                p.getString(DriverPrefs.LAST_ACCEPTED_SERVICE, "") == serviceName
+            val acceptedFare = p.getFloat(DriverPrefs.LAST_ACCEPTED_FARE, 0f).toDouble()
+            val acceptedDistance = p.getFloat(DriverPrefs.LAST_ACCEPTED_DISTANCE, 0f).toDouble()
+            if (activeTrip && acceptedFare > 0.0 && acceptedDistance > 0.0) showOverlay(serviceName, acceptedFare, acceptedDistance)
+            else removeOverlay()
+        } else if (values.fare != null && values.distance != null) {
             if (DriverPrefs.orderPassesFilter(this, values.fare, values.distance)) showOverlay(serviceName, values.fare, values.distance)
             else removeOverlay()
         } else if (event.eventType == AccessibilityEvent.TYPE_WINDOW_STATE_CHANGED) {
@@ -104,6 +114,7 @@ class RideAccessibilityService : AccessibilityService() {
         if (offer.fare != null || offer.distance != null || offer.pickupDistance != null) {
             edit.putString(DriverPrefs.LAST_OFFER_SERVICE, service)
         }
+        offer.distance?.let { edit.putString(DriverPrefs.LAST_OFFER_TRIP_DISTANCE, String.format(Locale.US, "%.2f", it)) }
         offer.fare?.let { edit.putString(DriverPrefs.LAST_OFFER_FARE, String.format(Locale.US, "%.0f", it)) }
         offer.pickupDistance?.let { edit.putString(DriverPrefs.LAST_OFFER_PICKUP, String.format(Locale.US, "%.1f", it)) }
         if (offer.fare != null && offer.distance != null && offer.distance > 0.0) {

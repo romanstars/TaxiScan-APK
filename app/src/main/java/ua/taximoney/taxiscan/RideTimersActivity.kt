@@ -149,6 +149,7 @@ class RideTimersActivity : AppCompatActivity() {
     private fun recordAcceptedTrip(edit: android.content.SharedPreferences.Editor, now: Long) {
         val lastService = prefs.getString(DriverPrefs.LAST_OFFER_SERVICE, null)
         val fare = prefs.getString(DriverPrefs.LAST_OFFER_FARE, null)?.replace(',', '.')?.toFloatOrNull()
+        val distance = prefs.getString(DriverPrefs.LAST_OFFER_TRIP_DISTANCE, null)?.replace(',', '.')?.toFloatOrNull()
         val amount = if (lastService == selectedService && fare != null) fare else null
         val key = selectedService.lowercase(Locale.ROOT)
         val tripsKey = "accepted_stats_${key}_trips"
@@ -158,9 +159,16 @@ class RideTimersActivity : AppCompatActivity() {
             edit.putFloat(revenueKey, prefs.getFloat(revenueKey, 0f) + amount)
                 .putString(DriverPrefs.LAST_ACCEPTED_SUMMARY, "$selectedService • ${amount.toInt()} ₴ • ${clock(now)}")
                 .putLong(DriverPrefs.LAST_ACCEPTED_AT, now)
+                .putString(DriverPrefs.LAST_ACCEPTED_SERVICE, selectedService)
+                .putFloat(DriverPrefs.LAST_ACCEPTED_FARE, amount)
+            if (lastService == selectedService && distance != null && distance > 0f)
+                edit.putFloat(DriverPrefs.LAST_ACCEPTED_DISTANCE, distance)
         } else {
             edit.putString(DriverPrefs.LAST_ACCEPTED_SUMMARY, "$selectedService • прийнято ${clock(now)} (сума невідома)")
                 .putLong(DriverPrefs.LAST_ACCEPTED_AT, now)
+                .putString(DriverPrefs.LAST_ACCEPTED_SERVICE, selectedService)
+                .putFloat(DriverPrefs.LAST_ACCEPTED_FARE, 0f)
+                .putFloat(DriverPrefs.LAST_ACCEPTED_DISTANCE, 0f)
         }
     }
 
