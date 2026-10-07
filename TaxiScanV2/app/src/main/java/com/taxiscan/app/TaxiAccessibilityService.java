@@ -11,6 +11,7 @@ import android.os.Build;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.view.Gravity;
+import android.view.MotionEvent;
 import android.view.WindowManager;
 import android.view.accessibility.AccessibilityEvent;
 import android.view.accessibility.AccessibilityNodeInfo;
@@ -32,7 +33,12 @@ public class TaxiAccessibilityService extends AccessibilityService {
   private static final Pattern KM=Pattern.compile("(?i)(\\d{1,2}(?:[.,]\\d{1,2})?)\\s*км");
   private WindowManager wm;
   private LinearLayout overlay;
-  private TextView serviceLabel, fareLabel, rateLabel, tripLabel, fuelLabel, wearLabel, netLabel, verdictLabel;
+  private ScrollView overlayBody;
+  private LinearLayout actions;
+  private TextView serviceLabel, compactSummary, resizeButton, fareLabel, rateLabel, tripLabel, fuelLabel, wearLabel, netLabel, verdictLabel;
+  private boolean compact;
+  private float dragStartX,dragStartY;
+  private int dragOriginX,dragOriginY;
   private long lastEventAt;
   private String lastSignature="";
 
@@ -148,6 +154,7 @@ public class TaxiAccessibilityService extends AccessibilityService {
     rateLabel.setText(String.format(new Locale("uk","UA"),"%.1f ₴/км   •   %.0f ₴/год",perKm,hourly));
     tripLabel.setText(String.format(new Locale("uk","UA"),"Подача  %.1f км     •     Поїздка  %.1f км\nЗагалом  %.1f км",pickup,distance,totalKm));
     fuelLabel.setText(money(fuel));wearLabel.setText(money(wear));netLabel.setText(money(net));
+    compactSummary.setText(String.format(new Locale("uk","UA"),"%.0f ₴  •  чистими %.0f ₴",amount,net));
     verdictLabel.setText(good?"✓  Вигідно за вашими фільтрами":"⚠  Не відповідає вашим фільтрам");
     verdictLabel.setTextColor(good?GREEN:YELLOW);
     if(overlay.getWindowToken()==null){try{wm.addView(overlay,params());}catch(Exception ignored){}}
@@ -156,7 +163,13 @@ public class TaxiAccessibilityService extends AccessibilityService {
   private void createOverlay(){
     overlay=new LinearLayout(this);overlay.setOrientation(LinearLayout.VERTICAL);overlay.setPadding(dp(14),dp(14),dp(14),dp(12));
     overlay.setBackground(shape(0xf20c100e,24,0xff315640));
-    LinearLayout header=row();serviceLabel=label("",GREEN,17,true);header.addView(serviceLabel,new LinearLayout.LayoutParams(0,-2,1));
+    LinearLayout header=row();serviceLabel=label("",GREEN,15,true);header.addView(serviceLabel,new LinearLayout.LayoutParams(0,-2,1));
+    compactSummary=label("",WHITE,13,true);compactSummary.setVisibility(android.view.View.GONE);header.addView(compactSummary);
+    resizeButton=actionButton("−",CARD,WHITE);resizeButton.setOnClickListener(v->setCompact(!compact));
+    LinearLayout.LayoutParams smallButton=new LinearLayout.LayoutParams(dp(42),dp(42));smallButton.leftMargin=dp(6);header.addView(resizeButton,smallButton);
+    TextView closeTop=actionButton("×",CARD,WHITE);closeTop.setOnClickListener(v->hideOverlay());
+    header.addView(closeTop,new LinearLayout.LayoutParams(dp(42),dp(42)));
+    serviceLabel.setOnTouchListener((view,event)->dragOverlay(event));
     overlay.addView(header);addDivider(overlay);
 
     ScrollView scroll=new ScrollView(this);scroll.setFillViewport(false);
@@ -173,9 +186,9 @@ public class TaxiAccessibilityService extends AccessibilityService {
     body.addView(income);verdictLabel=label("",YELLOW,15,true);verdictLabel.setPadding(dp(12),dp(11),dp(12),dp(11));
     verdictLabel.setBackground(shape(0xff292615,12,0xff796b20));LinearLayout.LayoutParams verdictParams=new LinearLayout.LayoutParams(-1,-2);verdictParams.topMargin=dp(10);body.addView(verdictLabel,verdictParams);
     TextView note=label("Розрахунок використовує суму та відстань, які видно на екрані сервісу.",MUTED,12,false);note.setPadding(dp(3),dp(9),dp(3),dp(2));body.addView(note);
-    scroll.addView(body);overlay.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
+    scroll.addView(body);overlayBody=scroll;overlay.addView(scroll,new LinearLayout.LayoutParams(-1,0,1));
 
-    LinearLayout actions=row();TextView settings=actionButton("⚙  Налаштування",CARD,WHITE);
+    actions=row();TextView settings=actionButton("⚙  Налаштування",CARD,WHITE);
     settings.setOnClickListener(v->{hideOverlay();Intent intent=new Intent(this,MainActivity.class);intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK|Intent.FLAG_ACTIVITY_CLEAR_TOP);intent.putExtra("open_settings",true);startActivity(intent);});
     TextView close=actionButton("Закрити",GREEN,Color.BLACK);close.setOnClickListener(v->hideOverlay());
     LinearLayout.LayoutParams left=new LinearLayout.LayoutParams(0,-2,1);left.rightMargin=dp(8);actions.addView(settings,left);
@@ -198,11 +211,43 @@ public class TaxiAccessibilityService extends AccessibilityService {
   private String money(double amount){return String.format(new Locale("uk","UA"),"%.0f ₴",amount);}
   private WindowManager.LayoutParams params(){
     int type=Build.VERSION.SDK_INT>=26?WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY:WindowManager.LayoutParams.TYPE_PHONE;
-    int screenHeight=getResources().getDisplayMetrics().heightPixels;int maxHeight=(int)(screenHeight*.88f);
-    WindowManager.LayoutParams p=new WindowManager.LayoutParams(-1,maxHeight,type,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,PixelFormat.TRANSLUCENT);
-    p.gravity=Gravity.TOP|Gravity.CENTER_HORIZONTAL;p.y=dp(24);return p;
+    int screenHeight=getResources().getDisplayMetrics().heightPixels,screenWidth=getResources().getDisplayMetrics().widthPixels;
+    SharedPreferences prefs=getSharedPreferences(MainActivity.PREF,MODE_PRIVATE);
+    int width=compact?Math.min(dp(360),screenWidth-dp(24)):-1;
+    int height=compact?WindowManager.LayoutParams.WRAP_CONTENT:(int)(screenHeight*.88f);
+    WindowManager.LayoutParams p=new WindowManager.LayoutParams(width,height,type,WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE|WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,PixelFormat.TRANSLUCENT);
+    p.gravity=Gravity.TOP|Gravity.CENTER_HORIZONTAL;p.x=prefs.getInt("overlay_x",0);p.y=prefs.getInt("overlay_y",dp(24));return p;
   }
   private void hideOverlay(){if(overlay!=null&&overlay.getWindowToken()!=null)try{wm.removeView(overlay);}catch(Exception ignored){}}
+  private void setCompact(boolean value){
+    compact=value;overlayBody.setVisibility(value?android.view.View.GONE:android.view.View.VISIBLE);
+    actions.setVisibility(value?android.view.View.GONE:android.view.View.VISIBLE);
+    compactSummary.setVisibility(value?android.view.View.VISIBLE:android.view.View.GONE);
+    resizeButton.setText(value?"+":"−");
+    if(overlay.getWindowToken()!=null){
+      WindowManager.LayoutParams p=(WindowManager.LayoutParams)overlay.getLayoutParams();
+      p.width=value?Math.min(dp(360),getResources().getDisplayMetrics().widthPixels-dp(24)):-1;
+      p.height=value?WindowManager.LayoutParams.WRAP_CONTENT:(int)(getResources().getDisplayMetrics().heightPixels*.88f);
+      try{wm.updateViewLayout(overlay,p);}catch(Exception ignored){}
+    }
+  }
+  private boolean dragOverlay(MotionEvent event){
+    if(overlay==null||overlay.getWindowToken()==null)return false;
+    WindowManager.LayoutParams p=(WindowManager.LayoutParams)overlay.getLayoutParams();
+    if(event.getAction()==MotionEvent.ACTION_DOWN){dragStartX=event.getRawX();dragStartY=event.getRawY();dragOriginX=p.x;dragOriginY=p.y;return true;}
+    if(event.getAction()==MotionEvent.ACTION_MOVE){
+      int sw=getResources().getDisplayMetrics().widthPixels,sh=getResources().getDisplayMetrics().heightPixels;
+      int width=compact?p.width:sw;int horizontalLimit=Math.max(0,(sw-width)/2);
+      p.x=Math.max(-horizontalLimit,Math.min(horizontalLimit,dragOriginX+(int)(event.getRawX()-dragStartX)));
+      int minY=dp(12),maxY=Math.max(minY,sh-overlay.getHeight()-dp(48));
+      p.y=Math.max(minY,Math.min(maxY,dragOriginY+(int)(event.getRawY()-dragStartY)));
+      try{wm.updateViewLayout(overlay,p);}catch(Exception ignored){}return true;
+    }
+    if(event.getAction()==MotionEvent.ACTION_UP||event.getAction()==MotionEvent.ACTION_CANCEL){
+      getSharedPreferences(MainActivity.PREF,MODE_PRIVATE).edit().putInt("overlay_x",p.x).putInt("overlay_y",p.y).apply();return true;
+    }
+    return true;
+  }
   private void playSignal(){try{android.media.ToneGenerator t=new android.media.ToneGenerator(android.media.AudioManager.STREAM_NOTIFICATION,65);t.startTone(android.media.ToneGenerator.TONE_PROP_BEEP,120);new android.os.Handler(getMainLooper()).postDelayed(t::release,500);}catch(Exception ignored){}}
   private int dp(int n){return(int)(n*getResources().getDisplayMetrics().density+.5f);}
   @Override public void onInterrupt(){hideOverlay();}
