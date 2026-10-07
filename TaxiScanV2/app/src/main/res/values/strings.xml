@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">TaxiScan</string>
+    <string name="accessibility_description">Зчитує текст пропозицій у вибраних застосунках таксі, щоб показати оцінку доходу.</string>
+</resources>

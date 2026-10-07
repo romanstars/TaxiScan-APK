@@ -1,8 +1,7 @@
 # TaxiScan APK
 
-Android test project for TaxiScan.
+Android project for TaxiScan. The updated 2.0 source is in [`TaxiScanV2/`](TaxiScanV2/).
 
-## APK
-Open **Actions → Build TaxiScan APK**. After a successful run, download the artifact **TaxiScan-debug-apk**.
+To get a test APK, open **Actions → TaxiScan 2.0 APK**, wait for the run to finish, then download the `TaxiScan-v2-debug-apk` artifact.
 
-Current build: Android target SDK 35, minimum SDK 26.
+Build locally with Android Studio and JDK 17, or run `gradle -p TaxiScanV2 :app:assembleDebug`.
